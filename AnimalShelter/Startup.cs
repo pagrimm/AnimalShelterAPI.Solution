@@ -28,7 +28,25 @@ public class Startup
             o.AssumeDefaultVersionWhenUnspecified = true;
             o.DefaultApiVersion = new ApiVersion(1, 0);
             });
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                document.Info.Version = "v1";
+                document.Info.Title = "Animal Shelter API";
+                document.Info.Description = "Search the animals under our care.";
+                document.Info.Contact = new NSwag.OpenApiContact
+                {
+                    Name = "Peter Grimm",
+                    Email = "pagrimm@gmail.com"
+                };
+                document.Info.License = new NSwag.OpenApiLicense
+                {
+                    Name = "Use under MIT",
+                    Url = "https://opensource.org/licenses/MIT"
+                };
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
