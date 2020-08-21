@@ -7,7 +7,7 @@ using System.Linq;
 namespace AnimalShelter.Controllers
 {
   [ApiVersion("1.0")]
-  [Route("api/v1/animals")]
+  [Route( "api/v{version:apiVersion}/[controller]" )]
   [ApiController]
   public class AnimalsV1Controller : ControllerBase
   {
@@ -60,7 +60,7 @@ namespace AnimalShelter.Controllers
   }
 
   [ApiVersion("2.0")]
-  [Route("api/v2/animals")]
+  [Route( "api/v{version:apiVersion}/[controller]" )]
   [ApiController]
   public class AnimalsV2Controller : ControllerBase
   {
@@ -72,7 +72,7 @@ namespace AnimalShelter.Controllers
     }
 
     // GET api/animals
-    [HttpGet]
+    [HttpGet, MapToApiVersion( "2.0" )]
     public ActionResult<IEnumerable<Animal>> Get(string species, string gender, string name)
     {
       var query = _db.Animals.AsQueryable();

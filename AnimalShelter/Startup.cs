@@ -22,7 +22,7 @@ public class Startup
         {
             services.AddDbContext<AnimalShelterContext>(opt =>
                 opt.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddApiVersioning(o => {
             o.ReportApiVersions = true;
             o.AssumeDefaultVersionWhenUnspecified = true;
