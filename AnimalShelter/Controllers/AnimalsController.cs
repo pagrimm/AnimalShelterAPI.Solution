@@ -3,17 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace AnimalShelter.Controllers
 {
   [ApiVersion("1.0")]
   [Route( "api/v{version:apiVersion}/[controller]" )]
   [ApiController]
-  public class AnimalsV1Controller : ControllerBase
+  public class AnimalsController : ControllerBase
   {
     private AnimalShelterContext _db;
 
-    public AnimalsV1Controller(AnimalShelterContext db)
+    public AnimalsController(AnimalShelterContext db)
     {
       _db = db;
     }
@@ -72,23 +73,35 @@ namespace AnimalShelter.Controllers
     }
 
     // GET api/animals
-    [HttpGet, MapToApiVersion( "2.0" )]
-    public ActionResult<IEnumerable<Animal>> Get(string species, string gender, string name)
+    [HttpGet]
+    public ActionResult<IEnumerable<Animal>> Get(string species, string breed, string gender, string name)
     {
       var query = _db.Animals.AsQueryable();
       if (species != null)
       {
-        query = query.Where(entry => entry.Species == species);
+        query = query.Where(entry => entry.Species.ToLower() == species.ToLower());
       }
       if (gender != null)
       {
-        query = query.Where(entry => entry.Gender == gender);
+        query = query.Where(entry => entry.Gender.ToLower() == gender.ToLower());
       }
       if (name != null)
       {
-        query = query.Where(entry => entry.Name == name);
+        query = query.Where(entry => entry.Name.ToLower()== name.ToLower());
+      }
+      if (breed != null)
+      {
+        query = query.Where(entry => entry.Breed.ToLower() == breed.ToLower());
       }
       return query.ToList();
+    }
+
+    [HttpGet("random")]
+    public ActionResult<Animal> Random()
+    {
+      Random rand = new Random();
+      int toSkip = rand.Next(0, _db.Animals.Count());
+      return _db.Animals.Skip(toSkip).Take(1).FirstOrDefault();
     }
   }
 }
